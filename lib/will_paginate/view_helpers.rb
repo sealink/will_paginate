@@ -268,7 +268,6 @@ module WillPaginate
       links.push    page_link_or_span(@collection.next_page,     'disabled next_page', @options[:next_label])
       
       html = links.join(@options[:separator])
-      html = html.html_safe if html.respond_to? :html_safe
       @options[:container] ? @template.content_tag(:div, html, html_attributes) : html
     end
 
@@ -292,7 +291,8 @@ module WillPaginate
     def gap_marker
       @gap_marker ||= begin
         gap_text = @template.will_paginate_translate(:page_gap) { '&hellip;' }
-        %(<span class="gap">#{gap_text}</span>)
+        gap_text = gap_text.html_safe if gap_text.respond_to? :html_safe
+        @template.content_tag :span, gap_text.html_safe, :class => 'gap'
       end
     end
     
